@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DashboardCitizenRouteImport } from './routes/dashboard.citizen'
 import { Route as IssuesIdRouteImport } from './routes/issues.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardCitizenRoute = DashboardCitizenRouteImport.update({
+  id: '/dashboard/citizen',
+  path: '/dashboard/citizen',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IssuesIdRoute = IssuesIdRouteImport.update({
   id: '/issues/$id',
   path: '/issues/$id',
@@ -32,30 +38,34 @@ const IssuesIdRoute = IssuesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/dashboard/citizen': typeof DashboardCitizenRoute
   '/issues/$id': typeof IssuesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/dashboard/citizen': typeof DashboardCitizenRoute
   '/issues/$id': typeof IssuesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/dashboard/citizen': typeof DashboardCitizenRoute
   '/issues/$id': typeof IssuesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/issues/$id'
+  fullPaths: '/' | '/auth' | '/dashboard/citizen' | '/issues/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/issues/$id'
-  id: '__root__' | '/' | '/auth' | '/issues/$id'
+  to: '/' | '/auth' | '/dashboard/citizen' | '/issues/$id'
+  id: '__root__' | '/' | '/auth' | '/dashboard/citizen' | '/issues/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  DashboardCitizenRoute: typeof DashboardCitizenRoute
   IssuesIdRoute: typeof IssuesIdRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/citizen': {
+      id: '/dashboard/citizen'
+      path: '/dashboard/citizen'
+      fullPath: '/dashboard/citizen'
+      preLoaderRoute: typeof DashboardCitizenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/issues/$id': {
       id: '/issues/$id'
       path: '/issues/$id'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  DashboardCitizenRoute: DashboardCitizenRoute,
   IssuesIdRoute: IssuesIdRoute,
 }
 export const routeTree = rootRouteImport
