@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 import { Route as DashboardCitizenRouteImport } from './routes/dashboard.citizen'
 import { Route as IssuesIdRouteImport } from './routes/issues.$id'
 import { Route as WorkerDashboardRouteImport } from './routes/worker.dashboard'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/admin/dashboard',
+  path: '/admin/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardCitizenRoute = DashboardCitizenRouteImport.update({
@@ -44,6 +50,7 @@ const WorkerDashboardRoute = WorkerDashboardRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
   '/issues/$id': typeof IssuesIdRoute
   '/worker/dashboard': typeof WorkerDashboardRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
   '/issues/$id': typeof IssuesIdRoute
   '/worker/dashboard': typeof WorkerDashboardRoute
@@ -59,6 +67,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
   '/issues/$id': typeof IssuesIdRoute
   '/worker/dashboard': typeof WorkerDashboardRoute
@@ -66,13 +75,25 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/dashboard/citizen' | '/issues/$id' | '/worker/dashboard'
+    | '/'
+    | '/auth'
+    | '/admin/dashboard'
+    | '/dashboard/citizen'
+    | '/issues/$id'
+    | '/worker/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard/citizen' | '/issues/$id' | '/worker/dashboard'
+  to:
+    | '/'
+    | '/auth'
+    | '/admin/dashboard'
+    | '/dashboard/citizen'
+    | '/issues/$id'
+    | '/worker/dashboard'
   id:
     | '__root__'
     | '/'
     | '/auth'
+    | '/admin/dashboard'
     | '/dashboard/citizen'
     | '/issues/$id'
     | '/worker/dashboard'
@@ -81,6 +102,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  AdminDashboardRoute: typeof AdminDashboardRoute
   DashboardCitizenRoute: typeof DashboardCitizenRoute
   IssuesIdRoute: typeof IssuesIdRoute
   WorkerDashboardRoute: typeof WorkerDashboardRoute
@@ -100,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/admin/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/citizen': {
@@ -129,6 +158,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  AdminDashboardRoute: AdminDashboardRoute,
   DashboardCitizenRoute: DashboardCitizenRoute,
   IssuesIdRoute: IssuesIdRoute,
   WorkerDashboardRoute: WorkerDashboardRoute,
