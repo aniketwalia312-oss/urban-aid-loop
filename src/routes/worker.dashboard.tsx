@@ -9,7 +9,7 @@ import { Chip, StatusBadge } from "@/components/sanket/StatusBadge";
 import { EvidenceImage } from "@/components/sanket/EvidenceImage";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { issuesQuery } from "@/lib/queries";
+import { issuesQuery, type Issue } from "@/lib/queries";
 import { priorityTier } from "@/lib/sanket";
 import { compressImage, currentPosition } from "@/lib/image-forensics";
 import { supabase } from "@/integrations/supabase/client";
@@ -75,7 +75,7 @@ function WorkerDashboard() {
   );
 }
 
-function TaskCard({ task }: { task: ReturnType<typeof useQuery<never>> extends never ? never : any }) {
+function TaskCard({ task }: { task: Issue }) {
   const queryClient = useQueryClient();
   const send = useServerFn(submitResolution);
   const [open, setOpen] = useState(false);
@@ -124,7 +124,7 @@ function TaskCard({ task }: { task: ReturnType<typeof useQuery<never>> extends n
       });
       await queryClient.invalidateQueries();
       toast.success(
-        res.status === "resolution_anomaly"
+        res.anomaly
           ? "Flagged for admin review — AI could not confirm the repair"
           : "Resolution submitted for citizen audit",
       );

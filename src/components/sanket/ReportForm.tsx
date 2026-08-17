@@ -50,9 +50,15 @@ export function ReportForm() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!session) return;
-    if (!file) return toast.error("A photo of the issue is required");
+    if (!file) {
+      toast.error("A photo of the issue is required");
+      return;
+    }
     const position = coords ?? (await currentPosition());
-    if (!position) return toast.error("GPS location is required to file a report");
+    if (!position) {
+      toast.error("GPS location is required to file a report");
+      return;
+    }
 
     setBusy(true);
     try {

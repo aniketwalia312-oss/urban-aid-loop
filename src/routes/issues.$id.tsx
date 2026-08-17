@@ -54,7 +54,7 @@ function IssueDetail() {
       const res = await vote({ data: { issueId: id, vote: choice } });
       await queryClient.invalidateQueries();
       toast.success(
-        res.status === "reopened_failed_resolution"
+        res.reopened
           ? "Ticket reopened — enough citizens report the issue persists"
           : "Audit vote recorded",
       );
