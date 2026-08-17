@@ -1,0 +1,2 @@
+CREATE POLICY "evidence read" ON storage.objects FOR SELECT USING (bucket_id = 'civic-evidence');
+CREATE POLICY "evidence upload" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'civic-evidence');
