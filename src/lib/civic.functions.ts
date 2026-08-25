@@ -45,14 +45,12 @@ export const submitResolution = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: isWorker } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "worker",
-    });
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "official_admin",
-    });
+    const { data: roles } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId);
+    const isWorker = (roles ?? []).some((r) => r.role === "worker");
+    const isAdmin = (roles ?? []).some((r) => r.role === "official_admin");
     if (!isWorker && !isAdmin) throw new Error("Field worker access required");
     const { ingestResolution } = await import("./civic.server");
     return await ingestResolution(context.userId, data);
@@ -90,10 +88,12 @@ export const assignWorker = createServerFn({ method: "POST" })
     z.object({ issueId: z.string().uuid(), workerId: z.string().uuid() }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "official_admin",
-    });
+    const { data: adminRoles } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId)
+      .eq("role", "official_admin");
+    const isAdmin = (adminRoles ?? []).length > 0;
     if (!isAdmin) throw new Error("Admin access required");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin
@@ -107,10 +107,12 @@ export const assignWorker = createServerFn({ method: "POST" })
 export const listWorkers = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "official_admin",
-    });
+    const { data: adminRoles } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId)
+      .eq("role", "official_admin");
+    const isAdmin = (adminRoles ?? []).length > 0;
     if (!isAdmin) throw new Error("Admin access required");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: roles } = await supabaseAdmin.from("user_roles").select("user_id").eq("role", "worker");
