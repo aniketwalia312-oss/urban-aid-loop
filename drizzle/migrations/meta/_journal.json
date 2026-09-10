@@ -15,6 +15,13 @@
       "when": 1789054734980,
       "tag": "0001_societal_innovation_portal",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789054777251,
+      "tag": "0002_challenge_media_storage_policies",
+      "breakpoints": true
     }
   ]
 }
