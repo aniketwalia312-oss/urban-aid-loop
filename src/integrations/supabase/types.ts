@@ -280,7 +280,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      app_role: "citizen" | "worker" | "official_admin"
+      app_role:
+        | "citizen"
+        | "worker"
+        | "official_admin"
+        | "university"
+        | "industry"
+        | "government"
       issue_status:
         | "reported"
         | "clustered_duplicate"
@@ -419,7 +425,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["citizen", "worker", "official_admin"],
+      app_role: [
+        "citizen",
+        "worker",
+        "official_admin",
+        "university",
+        "industry",
+        "government",
+      ],
       issue_status: [
         "reported",
         "clustered_duplicate",
