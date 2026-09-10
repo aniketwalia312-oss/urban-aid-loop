@@ -8,6 +8,13 @@
       "when": 1789054641810,
       "tag": "0000_add_innovation_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789054734980,
+      "tag": "0001_societal_innovation_portal",
+      "breakpoints": true
     }
   ]
 }
