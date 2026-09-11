@@ -382,9 +382,10 @@ export async function syncProjectProgress(projectId: string) {
   const all = milestones ?? [];
   const done = all.filter((m) => m.status === "done").length;
   const progress = all.length === 0 ? 0 : Math.round((done / all.length) * 100);
-  const patch: Record<string, unknown> = { progress };
-  if (progress === 100) patch["status"] = "completed";
-  await supabaseAdmin.from("projects").update(patch).eq("id", projectId);
+  await supabaseAdmin
+    .from("projects")
+    .update(progress === 100 ? { progress, status: "completed" as const } : { progress })
+    .eq("id", projectId);
 
   if (progress === 100) {
     const { data: project } = await supabaseAdmin

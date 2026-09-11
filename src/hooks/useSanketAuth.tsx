@@ -2,7 +2,13 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-export type AppRole = "citizen" | "worker" | "official_admin";
+export type AppRole =
+  | "citizen"
+  | "worker"
+  | "official_admin"
+  | "university"
+  | "industry"
+  | "government";
 
 type AuthValue = {
   session: Session | null;
@@ -11,6 +17,9 @@ type AuthValue = {
   name: string | null;
   isWorker: boolean;
   isAdmin: boolean;
+  isUniversity: boolean;
+  isIndustry: boolean;
+  isGovernment: boolean;
   refreshRoles: () => Promise<void>;
   signOut: () => Promise<void>;
 };
@@ -58,6 +67,9 @@ export function SanketAuthProvider({ children }: { children: ReactNode }) {
     name,
     isWorker: roles.includes("worker") || roles.includes("official_admin"),
     isAdmin: roles.includes("official_admin"),
+    isUniversity: roles.includes("university") || roles.includes("official_admin"),
+    isIndustry: roles.includes("industry") || roles.includes("official_admin"),
+    isGovernment: roles.includes("government") || roles.includes("official_admin"),
     refreshRoles: async () => {
       if (session?.user) await loadProfile(session.user.id);
     },
