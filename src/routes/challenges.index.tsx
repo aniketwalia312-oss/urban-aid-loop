@@ -11,7 +11,7 @@ import { challengesQuery } from "@/lib/innovation.queries";
 import { DOMAINS, DISTRICTS } from "@/lib/innovation";
 import { timeAgo } from "@/lib/sanket";
 
-export const Route = createFileRoute("/challenges")({
+export const Route = createFileRoute("/challenges/")({
   head: () => ({
     meta: [
       { title: "Societal challenges — Jharkhand innovation portal | Sanket" },

@@ -70,7 +70,10 @@ function NewChallenge() {
   }
 
   const locate = () => {
-    if (!navigator.geolocation) return toast.error("Location is not available on this device");
+    if (!navigator.geolocation) {
+      toast.error("Location is not available on this device");
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
@@ -115,13 +118,12 @@ function NewChallenge() {
         },
       });
       await queryClient.invalidateQueries({ queryKey: ["challenges"] });
-      if (result.duplicateOf) {
-        toast.success("Merged with an existing similar challenge");
-        void navigate({ to: "/challenges/$id", params: { id: result.duplicateOf } });
-      } else {
-        toast.success("Challenge submitted and routed to matching institutions");
-        void navigate({ to: "/challenges/$id", params: { id: result.challengeId } });
-      }
+      toast.success(
+        result.merged
+          ? "Merged with an existing similar challenge"
+          : `Routed to ${result.routes.length} matching institution${result.routes.length === 1 ? "" : "s"}`,
+      );
+      void navigate({ to: "/challenges/$id", params: { id: result.challengeId } });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not submit the challenge");
     } finally {
