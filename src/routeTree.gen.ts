@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as ChallengesIndexRouteImport } from './routes/challenges.index'
+import { Route as ChallengesIdRouteImport } from './routes/challenges.$id'
+import { Route as ChallengesNewRouteImport } from './routes/challenges.new'
 import { Route as DashboardCitizenRouteImport } from './routes/dashboard.citizen'
 import { Route as IssuesIdRouteImport } from './routes/issues.$id'
 import { Route as WorkerDashboardRouteImport } from './routes/worker.dashboard'
@@ -29,6 +32,21 @@ const AuthRoute = AuthRouteImport.update({
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/admin/dashboard',
   path: '/admin/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengesIndexRoute = ChallengesIndexRouteImport.update({
+  id: '/challenges/',
+  path: '/challenges/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengesIdRoute = ChallengesIdRouteImport.update({
+  id: '/challenges/$id',
+  path: '/challenges/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengesNewRoute = ChallengesNewRouteImport.update({
+  id: '/challenges/new',
+  path: '/challenges/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardCitizenRoute = DashboardCitizenRouteImport.update({
@@ -51,26 +69,35 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/challenges/$id': typeof ChallengesIdRoute
+  '/challenges/new': typeof ChallengesNewRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
   '/issues/$id': typeof IssuesIdRoute
   '/worker/dashboard': typeof WorkerDashboardRoute
+  '/challenges/': typeof ChallengesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/challenges/$id': typeof ChallengesIdRoute
+  '/challenges/new': typeof ChallengesNewRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
   '/issues/$id': typeof IssuesIdRoute
   '/worker/dashboard': typeof WorkerDashboardRoute
+  '/challenges': typeof ChallengesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/challenges/$id': typeof ChallengesIdRoute
+  '/challenges/new': typeof ChallengesNewRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
   '/issues/$id': typeof IssuesIdRoute
   '/worker/dashboard': typeof WorkerDashboardRoute
+  '/challenges/': typeof ChallengesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -78,34 +105,46 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin/dashboard'
+    | '/challenges/$id'
+    | '/challenges/new'
     | '/dashboard/citizen'
     | '/issues/$id'
     | '/worker/dashboard'
+    | '/challenges/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/admin/dashboard'
+    | '/challenges/$id'
+    | '/challenges/new'
     | '/dashboard/citizen'
     | '/issues/$id'
     | '/worker/dashboard'
+    | '/challenges'
   id:
     | '__root__'
     | '/'
     | '/auth'
     | '/admin/dashboard'
+    | '/challenges/$id'
+    | '/challenges/new'
     | '/dashboard/citizen'
     | '/issues/$id'
     | '/worker/dashboard'
+    | '/challenges/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
+  ChallengesIdRoute: typeof ChallengesIdRoute
+  ChallengesNewRoute: typeof ChallengesNewRoute
   DashboardCitizenRoute: typeof DashboardCitizenRoute
   IssuesIdRoute: typeof IssuesIdRoute
   WorkerDashboardRoute: typeof WorkerDashboardRoute
+  ChallengesIndexRoute: typeof ChallengesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -129,6 +168,27 @@ declare module '@tanstack/react-router' {
       path: '/admin/dashboard'
       fullPath: '/admin/dashboard'
       preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenges/': {
+      id: '/challenges/'
+      path: '/challenges'
+      fullPath: '/challenges/'
+      preLoaderRoute: typeof ChallengesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenges/$id': {
+      id: '/challenges/$id'
+      path: '/challenges/$id'
+      fullPath: '/challenges/$id'
+      preLoaderRoute: typeof ChallengesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenges/new': {
+      id: '/challenges/new'
+      path: '/challenges/new'
+      fullPath: '/challenges/new'
+      preLoaderRoute: typeof ChallengesNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/citizen': {
@@ -159,9 +219,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   AdminDashboardRoute: AdminDashboardRoute,
+  ChallengesIdRoute: ChallengesIdRoute,
+  ChallengesNewRoute: ChallengesNewRoute,
   DashboardCitizenRoute: DashboardCitizenRoute,
   IssuesIdRoute: IssuesIdRoute,
   WorkerDashboardRoute: WorkerDashboardRoute,
+  ChallengesIndexRoute: ChallengesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
