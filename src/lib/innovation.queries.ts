@@ -213,3 +213,50 @@ export const myChallengesQuery = (userId: string | undefined) =>
       return (data ?? []) as Challenge[];
     },
   });
+
+export const routesForInstitutionsQuery = (ids: string[]) =>
+  queryOptions({
+    queryKey: ["routes-for-institutions", ids.join(",")],
+    enabled: ids.length > 0,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("challenge_routes")
+        .select(
+          "id,status,match_score,rationale,institution_id,challenge_id,challenges:challenge_id(id,title,domain,district,priority_score,status,beneficiaries,ai_summary)",
+        )
+        .in("institution_id", ids)
+        .order("match_score", { ascending: false });
+      if (error) throw new Error(error.message);
+      return data ?? [];
+    },
+  });
+
+export const proposalsForInstitutionsQuery = (ids: string[]) =>
+  queryOptions({
+    queryKey: ["proposals-for-institutions", ids.join(",")],
+    enabled: ids.length > 0,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("proposals")
+        .select("id,title,status,budget_inr,duration_weeks,created_at,challenge_id,institution_id,challenges:challenge_id(title,domain)")
+        .in("institution_id", ids)
+        .order("created_at", { ascending: false });
+      if (error) throw new Error(error.message);
+      return data ?? [];
+    },
+  });
+
+export const pendingProposalsQuery = queryOptions({
+  queryKey: ["pending-proposals"],
+  queryFn: async () => {
+    const { data, error } = await supabase
+      .from("proposals")
+      .select(
+        "id,title,abstract,approach,faculty_mentor,team_members,duration_weeks,budget_inr,status,created_at,challenge_id,institutions:institution_id(name,type),challenges:challenge_id(title,domain,district)",
+      )
+      .eq("status", "submitted")
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  },
+});
