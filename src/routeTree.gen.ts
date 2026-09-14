@@ -16,7 +16,9 @@ import { Route as ChallengesIndexRouteImport } from './routes/challenges.index'
 import { Route as ChallengesIdRouteImport } from './routes/challenges.$id'
 import { Route as ChallengesNewRouteImport } from './routes/challenges.new'
 import { Route as DashboardCitizenRouteImport } from './routes/dashboard.citizen'
+import { Route as IndustryDashboardRouteImport } from './routes/industry.dashboard'
 import { Route as IssuesIdRouteImport } from './routes/issues.$id'
+import { Route as UniversityDashboardRouteImport } from './routes/university.dashboard'
 import { Route as WorkerDashboardRouteImport } from './routes/worker.dashboard'
 
 const IndexRoute = IndexRouteImport.update({
@@ -54,9 +56,19 @@ const DashboardCitizenRoute = DashboardCitizenRouteImport.update({
   path: '/dashboard/citizen',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IndustryDashboardRoute = IndustryDashboardRouteImport.update({
+  id: '/industry/dashboard',
+  path: '/industry/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IssuesIdRoute = IssuesIdRouteImport.update({
   id: '/issues/$id',
   path: '/issues/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UniversityDashboardRoute = UniversityDashboardRouteImport.update({
+  id: '/university/dashboard',
+  path: '/university/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorkerDashboardRoute = WorkerDashboardRouteImport.update({
@@ -72,7 +84,9 @@ export interface FileRoutesByFullPath {
   '/challenges/$id': typeof ChallengesIdRoute
   '/challenges/new': typeof ChallengesNewRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
+  '/industry/dashboard': typeof IndustryDashboardRoute
   '/issues/$id': typeof IssuesIdRoute
+  '/university/dashboard': typeof UniversityDashboardRoute
   '/worker/dashboard': typeof WorkerDashboardRoute
   '/challenges/': typeof ChallengesIndexRoute
 }
@@ -83,7 +97,9 @@ export interface FileRoutesByTo {
   '/challenges/$id': typeof ChallengesIdRoute
   '/challenges/new': typeof ChallengesNewRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
+  '/industry/dashboard': typeof IndustryDashboardRoute
   '/issues/$id': typeof IssuesIdRoute
+  '/university/dashboard': typeof UniversityDashboardRoute
   '/worker/dashboard': typeof WorkerDashboardRoute
   '/challenges': typeof ChallengesIndexRoute
 }
@@ -95,7 +111,9 @@ export interface FileRoutesById {
   '/challenges/$id': typeof ChallengesIdRoute
   '/challenges/new': typeof ChallengesNewRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
+  '/industry/dashboard': typeof IndustryDashboardRoute
   '/issues/$id': typeof IssuesIdRoute
+  '/university/dashboard': typeof UniversityDashboardRoute
   '/worker/dashboard': typeof WorkerDashboardRoute
   '/challenges/': typeof ChallengesIndexRoute
 }
@@ -108,7 +126,9 @@ export interface FileRouteTypes {
     | '/challenges/$id'
     | '/challenges/new'
     | '/dashboard/citizen'
+    | '/industry/dashboard'
     | '/issues/$id'
+    | '/university/dashboard'
     | '/worker/dashboard'
     | '/challenges/'
   fileRoutesByTo: FileRoutesByTo
@@ -119,7 +139,9 @@ export interface FileRouteTypes {
     | '/challenges/$id'
     | '/challenges/new'
     | '/dashboard/citizen'
+    | '/industry/dashboard'
     | '/issues/$id'
+    | '/university/dashboard'
     | '/worker/dashboard'
     | '/challenges'
   id:
@@ -130,7 +152,9 @@ export interface FileRouteTypes {
     | '/challenges/$id'
     | '/challenges/new'
     | '/dashboard/citizen'
+    | '/industry/dashboard'
     | '/issues/$id'
+    | '/university/dashboard'
     | '/worker/dashboard'
     | '/challenges/'
   fileRoutesById: FileRoutesById
@@ -142,7 +166,9 @@ export interface RootRouteChildren {
   ChallengesIdRoute: typeof ChallengesIdRoute
   ChallengesNewRoute: typeof ChallengesNewRoute
   DashboardCitizenRoute: typeof DashboardCitizenRoute
+  IndustryDashboardRoute: typeof IndustryDashboardRoute
   IssuesIdRoute: typeof IssuesIdRoute
+  UniversityDashboardRoute: typeof UniversityDashboardRoute
   WorkerDashboardRoute: typeof WorkerDashboardRoute
   ChallengesIndexRoute: typeof ChallengesIndexRoute
 }
@@ -198,11 +224,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardCitizenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/industry/dashboard': {
+      id: '/industry/dashboard'
+      path: '/industry/dashboard'
+      fullPath: '/industry/dashboard'
+      preLoaderRoute: typeof IndustryDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/issues/$id': {
       id: '/issues/$id'
       path: '/issues/$id'
       fullPath: '/issues/$id'
       preLoaderRoute: typeof IssuesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/university/dashboard': {
+      id: '/university/dashboard'
+      path: '/university/dashboard'
+      fullPath: '/university/dashboard'
+      preLoaderRoute: typeof UniversityDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/worker/dashboard': {
@@ -222,7 +262,9 @@ const rootRouteChildren: RootRouteChildren = {
   ChallengesIdRoute: ChallengesIdRoute,
   ChallengesNewRoute: ChallengesNewRoute,
   DashboardCitizenRoute: DashboardCitizenRoute,
+  IndustryDashboardRoute: IndustryDashboardRoute,
   IssuesIdRoute: IssuesIdRoute,
+  UniversityDashboardRoute: UniversityDashboardRoute,
   WorkerDashboardRoute: WorkerDashboardRoute,
   ChallengesIndexRoute: ChallengesIndexRoute,
 }
