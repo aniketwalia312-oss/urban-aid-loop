@@ -32,8 +32,9 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const { session, isAdmin, isWorker, refreshRoles } = useSanketAuth();
+  const { session, isAdmin, isWorker, isUniversity, isIndustry, isGovernment, refreshRoles } = useSanketAuth();
   const elevate = useServerFn(elevateRole);
+  const elevateEco = useServerFn(elevateEcosystem);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
