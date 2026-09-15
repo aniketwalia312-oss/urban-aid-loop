@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { elevateRole } from "@/lib/civic.functions";
+import { elevateEcosystem } from "@/lib/innovation.functions";
 import { useSanketAuth } from "@/hooks/useSanketAuth";
 
 export const Route = createFileRoute("/auth")({
@@ -31,8 +32,9 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const { session, isAdmin, isWorker, refreshRoles } = useSanketAuth();
+  const { session, isAdmin, isWorker, isUniversity, isIndustry, isGovernment, refreshRoles } = useSanketAuth();
   const elevate = useServerFn(elevateRole);
+  const elevateEco = useServerFn(elevateEcosystem);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,11 +45,21 @@ function AuthPage() {
   useEffect(() => {
     if (session && !passkey) {
       void navigate({
-        to: isAdmin ? "/admin/dashboard" : isWorker ? "/worker/dashboard" : "/dashboard/citizen",
+        to: isAdmin
+          ? "/admin/dashboard"
+          : isWorker
+            ? "/worker/dashboard"
+            : isGovernment
+              ? "/government/dashboard"
+              : isUniversity
+                ? "/university/dashboard"
+                : isIndustry
+                  ? "/industry/dashboard"
+                  : "/dashboard/citizen",
         replace: true,
       });
     }
-  }, [session, isAdmin, isWorker, navigate, passkey]);
+  }, [session, isAdmin, isWorker, isUniversity, isIndustry, isGovernment, navigate, passkey]);
 
   const applyPasskey = async () => {
     if (!passkey) return;
@@ -56,6 +68,23 @@ function AuthPage() {
       await refreshRoles();
       toast.success(role === "official_admin" ? "Admin access granted" : "Field worker access granted");
       void navigate({ to: role === "official_admin" ? "/admin/dashboard" : "/worker/dashboard", replace: true });
+      return;
+    } catch {
+      /* fall through to ecosystem passkeys */
+    }
+    try {
+      const { role } = await elevateEco({ data: { passkey } });
+      await refreshRoles();
+      toast.success("Access granted");
+      void navigate({
+        to:
+          role === "government"
+            ? "/government/dashboard"
+            : role === "industry"
+              ? "/industry/dashboard"
+              : "/university/dashboard",
+        replace: true,
+      });
     } catch {
       toast.error("Invalid access passkey");
       void navigate({ to: "/dashboard/citizen", replace: true });
@@ -113,7 +142,7 @@ function AuthPage() {
           </div>
           <h1 className="mt-3 text-2xl font-semibold">Sanket access</h1>
           <p className="text-sm text-muted-foreground">
-            Citizens sign in freely. Field workers and officials add their passkey.
+            Citizens sign in freely. Field workers, universities, industry partners and officials add their passkey.
           </p>
         </div>
 
@@ -191,7 +220,7 @@ function PasskeyField({ value, onChange }: { value: string; onChange: (v: string
         id="passkey"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Field worker or official passkey"
+        placeholder="Worker, official, university, industry or government passkey"
       />
     </div>
   );

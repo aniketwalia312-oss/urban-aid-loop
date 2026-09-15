@@ -49,8 +49,11 @@ function Landing() {
               <Button asChild size="lg">
                 <Link to="/dashboard/citizen">Report an issue</Link>
               </Button>
+              <Button asChild size="lg" variant="secondary">
+                <Link to="/challenges/new">Submit a societal challenge</Link>
+              </Button>
               <Button asChild size="lg" variant="outline">
-                <Link to="/auth">Worker / official access</Link>
+                <Link to="/auth">Institution / official access</Link>
               </Button>
             </div>
           </div>
@@ -73,6 +76,44 @@ function Landing() {
         <Feature icon={Radar} title="AI resolution audit">
           Vision compares before and after, then citizens vote — 30% "still present" reopens the ticket.
         </Feature>
+      </section>
+
+      <section className="border-t bg-secondary/30">
+        <div className="mx-auto max-w-6xl space-y-6 px-4 py-14">
+          <div className="max-w-2xl space-y-3">
+            <h2 className="text-2xl font-semibold tracking-tight">
+              From community challenge to deployed innovation
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Citizens, panchayats, urban local bodies and departments across Jharkhand submit societal challenges.
+              AI classifies, prioritises and de-duplicates them, then routes each one to universities with matching
+              expertise. Institutions form multidisciplinary teams and submit proposals; approved proposals become
+              monitored projects with milestones, industry and CSR partners, and measurable outcomes.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild>
+                <Link to="/challenges">Browse challenges</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link to="/government/dashboard">View analytics</Link>
+              </Button>
+            </div>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Feature icon={Users} title="Citizen engagement">
+              Submit challenges with photos, documents, district and GPS location in a few minutes.
+            </Feature>
+            <Feature icon={Radar} title="AI routing">
+              Thematic classification and expertise matching send each challenge to the right institutions.
+            </Feature>
+            <Feature icon={Workflow} title="University collaboration">
+              Faculty-mentored student teams accept challenges and submit costed solution proposals.
+            </Feature>
+            <Feature icon={ShieldCheck} title="Industry partnership">
+              Industries, startups, MSMEs and CSR funds back projects through to pilot and deployment.
+            </Feature>
+          </div>
+        </div>
       </section>
     </AppShell>
   );
