@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { elevateRole } from "@/lib/civic.functions";
+import { elevateEcosystem } from "@/lib/innovation.functions";
 import { useSanketAuth } from "@/hooks/useSanketAuth";
 
 export const Route = createFileRoute("/auth")({
