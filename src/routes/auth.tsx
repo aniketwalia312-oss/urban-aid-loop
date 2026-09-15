@@ -45,11 +45,21 @@ function AuthPage() {
   useEffect(() => {
     if (session && !passkey) {
       void navigate({
-        to: isAdmin ? "/admin/dashboard" : isWorker ? "/worker/dashboard" : "/dashboard/citizen",
+        to: isAdmin
+          ? "/admin/dashboard"
+          : isWorker
+            ? "/worker/dashboard"
+            : isGovernment
+              ? "/government/dashboard"
+              : isUniversity
+                ? "/university/dashboard"
+                : isIndustry
+                  ? "/industry/dashboard"
+                  : "/dashboard/citizen",
         replace: true,
       });
     }
-  }, [session, isAdmin, isWorker, navigate, passkey]);
+  }, [session, isAdmin, isWorker, isUniversity, isIndustry, isGovernment, navigate, passkey]);
 
   const applyPasskey = async () => {
     if (!passkey) return;
@@ -58,6 +68,23 @@ function AuthPage() {
       await refreshRoles();
       toast.success(role === "official_admin" ? "Admin access granted" : "Field worker access granted");
       void navigate({ to: role === "official_admin" ? "/admin/dashboard" : "/worker/dashboard", replace: true });
+      return;
+    } catch {
+      /* fall through to ecosystem passkeys */
+    }
+    try {
+      const { role } = await elevateEco({ data: { passkey } });
+      await refreshRoles();
+      toast.success("Access granted");
+      void navigate({
+        to:
+          role === "government"
+            ? "/government/dashboard"
+            : role === "industry"
+              ? "/industry/dashboard"
+              : "/university/dashboard",
+        replace: true,
+      });
     } catch {
       toast.error("Invalid access passkey");
       void navigate({ to: "/dashboard/citizen", replace: true });
