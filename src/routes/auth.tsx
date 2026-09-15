@@ -142,7 +142,7 @@ function AuthPage() {
           </div>
           <h1 className="mt-3 text-2xl font-semibold">Sanket access</h1>
           <p className="text-sm text-muted-foreground">
-            Citizens sign in freely. Field workers and officials add their passkey.
+            Citizens sign in freely. Field workers, universities, industry partners and officials add their passkey.
           </p>
         </div>
 
@@ -220,7 +220,7 @@ function PasskeyField({ value, onChange }: { value: string; onChange: (v: string
         id="passkey"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Field worker or official passkey"
+        placeholder="Worker, official, university, industry or government passkey"
       />
     </div>
   );

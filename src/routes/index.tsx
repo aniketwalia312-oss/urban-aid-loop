@@ -49,8 +49,11 @@ function Landing() {
               <Button asChild size="lg">
                 <Link to="/dashboard/citizen">Report an issue</Link>
               </Button>
+              <Button asChild size="lg" variant="secondary">
+                <Link to="/challenges/new">Submit a societal challenge</Link>
+              </Button>
               <Button asChild size="lg" variant="outline">
-                <Link to="/auth">Worker / official access</Link>
+                <Link to="/auth">Institution / official access</Link>
               </Button>
             </div>
           </div>
