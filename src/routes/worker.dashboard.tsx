@@ -114,7 +114,10 @@ function TaskCard({ task }: { task: Issue }) {
     setBusy(true);
     try {
       const blob = await compressImage(file);
-      const path = `resolutions/${task.id}/${crypto.randomUUID()}.jpg`;
+      const { data: sess } = await supabase.auth.getSession();
+      const uid = sess.session?.user.id;
+      if (!uid) throw new Error("Please sign in again");
+      const path = `${uid}/resolutions/${task.id}/${crypto.randomUUID()}.jpg`;
       const { error } = await supabase.storage
         .from("civic-evidence")
         .upload(path, blob, { contentType: "image/jpeg" });

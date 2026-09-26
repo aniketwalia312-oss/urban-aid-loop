@@ -140,8 +140,8 @@ function loadGoogleMaps(onReady: () => void, onError: () => void) {
     return;
   }
 
-  const key = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY;
-  const channel = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID;
+  const key = import.meta.env["VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY"];
+  const channel = import.meta.env["VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID"];
   if (!key) {
     onError();
     return;
@@ -156,7 +156,7 @@ function loadGoogleMaps(onReady: () => void, onError: () => void) {
 
   window.initSanketHomepageMap = onReady;
   const script = document.createElement("script");
-  script.dataset.sanketGoogleMap = "true";
+  script.dataset["sanketGoogleMap"] = "true";
   script.async = true;
   script.defer = true;
   script.onerror = onError;
