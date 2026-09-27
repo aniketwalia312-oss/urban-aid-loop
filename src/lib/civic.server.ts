@@ -240,14 +240,15 @@ export async function tallyVotes(issueId: string) {
   return { total: all.length, still, resolved, reopened: false };
 }
 
-const PASSKEYS: Record<string, "worker" | "official_admin"> = {
-  India123: "worker",
-  INDIA123: "official_admin",
-};
-
+// Passkeys live in server-side secrets, never in source.
 export async function elevate(userId: string, passkey: string) {
-  const role = PASSKEYS[passkey];
-  if (!role) throw new Error("Invalid access passkey");
+  const candidates: Array<[string | undefined, "worker" | "official_admin"]> = [
+    [process.env["ROLE_PASSKEY_WORKER"], "worker"],
+    [process.env["ROLE_PASSKEY_ADMIN"], "official_admin"],
+  ];
+  const match = candidates.find(([value]) => value && value === passkey);
+  if (!match) throw new Error("Invalid access passkey");
+  const role = match[1];
   await supabaseAdmin.from("user_roles").upsert({ user_id: userId, role }, { onConflict: "user_id,role" });
   return { role };
 }

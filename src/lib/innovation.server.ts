@@ -411,15 +411,16 @@ export async function syncProjectProgress(projectId: string) {
   return { progress };
 }
 
-const ROLE_PASSKEYS: Record<string, "university" | "industry" | "government"> = {
-  UNIVERSITY123: "university",
-  INDUSTRY123: "industry",
-  GOVT123: "government",
-};
-
+// Passkeys live in server-side secrets, never in source.
 export async function elevateEcosystemRole(userId: string, passkey: string) {
-  const role = ROLE_PASSKEYS[passkey];
-  if (!role) throw new Error("Invalid access passkey");
+  const candidates: Array<[string | undefined, "university" | "industry" | "government"]> = [
+    [process.env["ROLE_PASSKEY_UNIVERSITY"], "university"],
+    [process.env["ROLE_PASSKEY_INDUSTRY"], "industry"],
+    [process.env["ROLE_PASSKEY_GOVERNMENT"], "government"],
+  ];
+  const match = candidates.find(([value]) => value && value === passkey);
+  if (!match) throw new Error("Invalid access passkey");
+  const role = match[1];
   await supabaseAdmin.from("user_roles").upsert({ user_id: userId, role }, { onConflict: "user_id,role" });
   return { role };
 }
