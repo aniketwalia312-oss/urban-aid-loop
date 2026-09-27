@@ -180,6 +180,24 @@ export const submitProposal = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
+    // Authorization: caller must own the institution and the institution must
+    // have an accepted routing to this challenge before any status changes.
+    const { data: institution } = await context.supabase
+      .from("institutions")
+      .select("id, owner_id")
+      .eq("id", data.institutionId)
+      .maybeSingle();
+    if (!institution || institution.owner_id !== context.userId)
+      throw new Error("You can only submit proposals for your own institution");
+    const { data: route } = await context.supabase
+      .from("challenge_routes")
+      .select("id")
+      .eq("challenge_id", data.challengeId)
+      .eq("institution_id", data.institutionId)
+      .eq("status", "accepted")
+      .maybeSingle();
+    if (!route) throw new Error("Your institution must accept the routed challenge first");
+
     const { data: proposal, error } = await context.supabase
       .from("proposals")
       .insert({

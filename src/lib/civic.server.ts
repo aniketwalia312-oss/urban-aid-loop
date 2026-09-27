@@ -146,6 +146,7 @@ export async function ingestReport(userId: string, input: ReportInput) {
 export async function ingestResolution(
   workerId: string,
   input: { issueId: string; afterPath: string; notes: string; lat: number; lng: number },
+  opts: { isAdmin?: boolean } = {},
 ) {
   const { data: issue } = await supabaseAdmin
     .from("civic_issues")
@@ -153,6 +154,8 @@ export async function ingestResolution(
     .eq("id", input.issueId)
     .maybeSingle();
   if (!issue) throw new Error("Issue not found");
+  if (!opts.isAdmin && issue.assigned_worker_id !== workerId)
+    throw new Error("This issue is not assigned to you");
 
   const gpsDrift = distanceMeters(
     { lat: issue.latitude, lng: issue.longitude },
@@ -240,14 +243,15 @@ export async function tallyVotes(issueId: string) {
   return { total: all.length, still, resolved, reopened: false };
 }
 
-const PASSKEYS: Record<string, "worker" | "official_admin"> = {
-  India123: "worker",
-  INDIA123: "official_admin",
-};
-
+// Passkeys live in server-side secrets, never in source.
 export async function elevate(userId: string, passkey: string) {
-  const role = PASSKEYS[passkey];
-  if (!role) throw new Error("Invalid access passkey");
+  const candidates: Array<[string | undefined, "worker" | "official_admin"]> = [
+    [process.env["ROLE_PASSKEY_WORKER"], "worker"],
+    [process.env["ROLE_PASSKEY_ADMIN"], "official_admin"],
+  ];
+  const match = candidates.find(([value]) => value && value === passkey);
+  if (!match) throw new Error("Invalid access passkey");
+  const role = match[1];
   await supabaseAdmin.from("user_roles").upsert({ user_id: userId, role }, { onConflict: "user_id,role" });
   return { role };
 }
