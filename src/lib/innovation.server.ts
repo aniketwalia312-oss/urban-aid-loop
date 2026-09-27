@@ -141,6 +141,10 @@ export type SubmitChallengeInput = {
 };
 
 export async function ingestChallenge(userId: string, input: SubmitChallengeInput) {
+  // Media files live in per-user folders; only sign paths the caller owns.
+  for (const p of [...input.mediaPaths, ...input.documentPaths]) {
+    if (!p.startsWith(`${userId}/`)) throw new Error("Uploaded file does not belong to you");
+  }
   let imageUrl: string | null = null;
   if (input.mediaPaths[0]) {
     const { data } = await supabaseAdmin.storage
