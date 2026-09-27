@@ -146,6 +146,7 @@ export async function ingestReport(userId: string, input: ReportInput) {
 export async function ingestResolution(
   workerId: string,
   input: { issueId: string; afterPath: string; notes: string; lat: number; lng: number },
+  opts: { isAdmin?: boolean } = {},
 ) {
   const { data: issue } = await supabaseAdmin
     .from("civic_issues")
@@ -153,6 +154,8 @@ export async function ingestResolution(
     .eq("id", input.issueId)
     .maybeSingle();
   if (!issue) throw new Error("Issue not found");
+  if (!opts.isAdmin && issue.assigned_worker_id !== workerId)
+    throw new Error("This issue is not assigned to you");
 
   const gpsDrift = distanceMeters(
     { lat: issue.latitude, lng: issue.longitude },

@@ -53,7 +53,7 @@ export const submitResolution = createServerFn({ method: "POST" })
     const isAdmin = (roles ?? []).some((r) => r.role === "official_admin");
     if (!isWorker && !isAdmin) throw new Error("Field worker access required");
     const { ingestResolution } = await import("./civic.server");
-    return await ingestResolution(context.userId, data);
+    return await ingestResolution(context.userId, data, { isAdmin });
   });
 
 export const castVote = createServerFn({ method: "POST" })
