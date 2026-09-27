@@ -19,6 +19,9 @@ export const submitReport = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => reportSchema.parse(input))
   .handler(async ({ data, context }) => {
+    // Evidence files live in per-user folders; only sign paths the caller owns.
+    if (!data.path.startsWith(`${context.userId}/`))
+      throw new Error("Evidence file does not belong to you");
     const { ingestReport } = await import("./civic.server");
     return await ingestReport(context.userId, data);
   });
@@ -140,6 +143,14 @@ export const updateIssueStatus = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
+    // Only officials or the worker assigned to the issue may change its status.
+    const [{ data: roleRows }, { data: issue }] = await Promise.all([
+      context.supabase.from("user_roles").select("role").eq("user_id", context.userId),
+      context.supabase.from("civic_issues").select("assigned_worker_id").eq("id", data.issueId).maybeSingle(),
+    ]);
+    const isAdmin = (roleRows ?? []).some((r) => r.role === "official_admin");
+    const isAssignedWorker = issue?.assigned_worker_id === context.userId;
+    if (!isAdmin && !isAssignedWorker) throw new Error("Not authorized to change this issue's status");
     const { error } = await context.supabase
       .from("civic_issues")
       .update({ status: data.status })
